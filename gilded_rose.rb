@@ -12,10 +12,8 @@ end
 
 def update_quality_for_a_passed_day(item)
   if is_aged_brie?(item) || is_backstage_pass?(item)
-    if item.quality < 50
-      increase_quality(item)
-      increase_quality_further_if_backstage_pass(item)
-    end
+    increase_quality(item)
+    increase_quality_further_if_backstage_pass(item)
   else
     decrease_quality(item)
     decrease_quality(item) if is_conjured?(item)
@@ -27,18 +25,15 @@ def update_sell_in(item)
 end
 
 def update_quality_after_sell_in_date(item)
-  if item.sell_in < 0
-    if is_aged_brie?(item)
-      if item.quality < 50
-        increase_quality(item)
-      end
+  return unless item.sell_in < 0
+  if is_aged_brie?(item)
+    increase_quality(item)
+  else
+    if is_backstage_pass?(item)
+      item.quality = 0
     else
-      if is_backstage_pass?(item)
-        item.quality = 0
-      else
-        # per spec, Conjured items's quality lowering doesn't double after sell-in date
-        decrease_quality(item) unless is_conjured?(item)
-      end
+      # per spec, Conjured items's quality lowering doesn't double after sell-in date
+      decrease_quality(item) unless is_conjured?(item)
     end
   end
 end
@@ -51,6 +46,7 @@ end
 
 # quality methods
 def increase_quality(item)
+  return unless item.quality < 50
   item.quality += 1
 end
 
