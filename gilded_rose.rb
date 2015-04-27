@@ -14,14 +14,7 @@ def update_quality_for_a_passed_day(item)
   if is_aged_brie?(item) || is_backstage_pass?(item)
     if item.quality < 50
       increase_quality(item)
-      if is_backstage_pass?(item)
-        if item.sell_in < 11
-          increase_quality(item)
-        end
-        if item.sell_in < 6
-          increase_quality(item)
-        end
-      end
+      increase_quality_further_if_backstage_pass(item)
     end
   else
     if item.quality > 0
@@ -55,6 +48,12 @@ def update_quality_after_sell_in_date(item)
       end
     end
   end
+end
+
+def increase_quality_further_if_backstage_pass(item)
+  return unless is_backstage_pass?(item)
+  increase_quality(item) if item.sell_in < 11
+  increase_quality(item) if item.sell_in < 6
 end
 
 # quality methods
