@@ -24,14 +24,10 @@ def update_quality_for_a_passed_day(item)
       item.quality += 1
       if item.name == 'Backstage passes to a TAFKAL80ETC concert'
         if item.sell_in < 11
-          if item.quality < 50
-            item.quality += 1
-          end
+          item.quality += 1
         end
         if item.sell_in < 6
-          if item.quality < 50
-            item.quality += 1
-          end
+          item.quality += 1
         end
       end
     end
