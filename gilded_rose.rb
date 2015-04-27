@@ -5,6 +5,12 @@ def update_quality(items)
 end
 
 def update_quality_for(item)
+  update_quality_for_a_passed_day(item)
+  update_sell_in_for_sulfuras(item)
+  update_quality_after_sell_in_date(item)
+end
+
+def update_quality_for_a_passed_day(item)
   if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
     if item.quality > 0
       if item.name.include?('Conjured')
@@ -30,9 +36,15 @@ def update_quality_for(item)
       end
     end
   end
+end
+
+def update_sell_in_for_sulfuras(item)
   if item.name != 'Sulfuras, Hand of Ragnaros'
     item.sell_in -= 1
   end
+end
+
+def update_quality_after_sell_in_date(item)
   if item.sell_in < 0
     if item.name != "Aged Brie"
       if item.name != 'Backstage passes to a TAFKAL80ETC concert'
