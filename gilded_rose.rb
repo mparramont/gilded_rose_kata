@@ -17,12 +17,8 @@ def update_quality_for_a_passed_day(item)
       increase_quality_further_if_backstage_pass(item)
     end
   else
-    if item.quality > 0
-      if is_conjured?(item)
-        decrease_quality(item)
-      end
-      decrease_quality(item)
-    end
+    decrease_quality(item)
+    decrease_quality(item) if is_conjured?(item)
   end
 end
 
@@ -40,10 +36,8 @@ def update_quality_after_sell_in_date(item)
       if is_backstage_pass?(item)
         item.quality = 0
       else
-        if item.quality > 0
-          # per spec, Conjured items's quality lowering doesn't double after sell-in date
-          decrease_quality(item) unless is_conjured?(item)
-        end
+        # per spec, Conjured items's quality lowering doesn't double after sell-in date
+        decrease_quality(item) unless is_conjured?(item)
       end
     end
   end
@@ -61,6 +55,7 @@ def increase_quality(item)
 end
 
 def decrease_quality(item)
+  return unless item.quality > 0
   item.quality -= 1 unless is_legendary?(item)
 end
 
