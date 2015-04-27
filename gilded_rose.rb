@@ -11,15 +11,7 @@ def update_quality_for(item)
 end
 
 def update_quality_for_a_passed_day(item)
-  if !is_aged_brie?(item) && !is_backstage_pass?(item)
-    if item.quality > 0
-      if is_conjured?(item)
-        item.quality -= 2
-      elsif !is_legendary?(item)
-        item.quality -= 1
-      end
-    end
-  else
+  if is_aged_brie?(item) || is_backstage_pass?(item)
     if item.quality < 50
       item.quality += 1
       if is_backstage_pass?(item)
@@ -31,31 +23,35 @@ def update_quality_for_a_passed_day(item)
         end
       end
     end
+  else
+    if item.quality > 0
+      if is_conjured?(item)
+        item.quality -= 2
+      elsif !is_legendary?(item)
+        item.quality -= 1
+      end
+    end
   end
 end
 
 def update_sell_in(item)
-  if !is_legendary?(item)
-    item.sell_in -= 1
-  end
+  item.sell_in -= 1 unless is_legendary?(item)
 end
 
 def update_quality_after_sell_in_date(item)
   if item.sell_in < 0
-    if !is_aged_brie?(item)
-      if !is_backstage_pass?(item)
-        if item.quality > 0
-          # per spec, Conjured items's quality lowering doesn't double after sell-in date
-          if !is_legendary?(item) && !is_conjured?(item)
-            item.quality -= 1
-          end
-        end
-      else
-        item.quality = 0
-      end
-    else
+    if is_aged_brie?(item)
       if item.quality < 50
         item.quality += 1
+      end
+    else
+      if is_backstage_pass?(item)
+        item.quality = 0
+      else
+        if item.quality > 0
+          # per spec, Conjured items's quality lowering doesn't double after sell-in date
+          item.quality -= 1 unless is_legendary?(item) || is_conjured?(item)
+        end
       end
     end
   end
